@@ -1,38 +1,35 @@
 import tweepy
 from credentials import *
 
-client = tweepy.Client(API_BEARER_TOKEN, API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-
-auth = tweepy.OAuth1UserHandler(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-api = tweepy.API(auth)
-
-
-filters = ["Lula", "Bolsonaro"]
-
 
 class AllStream(tweepy.StreamingClient):
 
     def on_connect(self):
 
-        print("Connected")
+        print("Connected Succesfully")
 
-        return True
+    def on_connection_error(self):
+        self.disconnect()
 
-    def on_tweet(self, tweet):
+    def on_data(self, raw_data):
 
+        print(raw_data)
 
-        if tweet.referenced_tweets == None:
-            print(tweet.text)
-            client.like(tweet.id)
+    def on_status(self, status):
 
-            time.sleep(10)
-
-stream = AllStream(bearer_token=API_BEARER_TOKEN)
-
-for term in filters:
-    stream.add_rules(tweepy.StreamRule(term))
-
-stream.filter(tweet_fields=["referenced_tweets"])
+        print ("Tweet Text: ",status.text)
 
 
+
+stream_data = AllStream(API_BEARER_TOKEN)
+
+filter = ["Lula", "Bolsonaro"]
+
+for key in filter:
+    stream_data.add_rules(tweepy.StreamRule(key))
+
+stream_data.filter(tweet_fields=["referenced_tweets"])
     
+
+
+
