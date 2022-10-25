@@ -14,18 +14,24 @@ class AllStream(tweepy.StreamingClient):
 
     def on_data(self, raw_data):
 
-        
+        # Serializing the raw data into a Json
         json_response = json.loads(raw_data)
-
-        for key, value in json_response.items():
-            print(key)
         
-        # if 'location' in json_response.keys():
-        #     tweet_data = [str(json_response['data']['id']),
-        #               str(json_response['data']['text']),
-        #               str(json_response['includes']['users'][0]['location'])]
+        # Retrieve location data, tweet text and id. If the location does not exist, signed None
+        if "location" in json_response["includes"]["users"][0]:
+            
+            tweet_data = {"tweeet_id":json_response["data"]["id"], "tweet_text":json_response["data"]["text"],"location":json_response["includes"]["users"][0]["location"]}
+        
+        else: 
+            
+            tweet_data = {"tweeet_id":json_response["data"]["id"], "tweet_text":json_response["data"]["text"],"location":None}
+        
+        return tweet_data
 
-        # print(tweet_data)
+
+    
+
+        
 
     
 class StartStream():
@@ -34,11 +40,14 @@ class StartStream():
         
         self.stream = stream
 
+    # Adding a rule to search for Tweets
     def insert_filter(self, *filter):
 
         for key in filter:
             self.stream.add_rules(tweepy.StreamRule(key))
 
+
+    # Defining which filters will be used.
     def start_stream(self):
         self.stream.filter(expansions = "author_id", user_fields = ["location"] )
 
