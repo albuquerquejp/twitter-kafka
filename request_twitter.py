@@ -26,14 +26,8 @@ class AllStream(tweepy.StreamingClient):
             
             tweet_data = {"tweeet_id":json_response["data"]["id"], "tweet_text":json_response["data"]["text"],"location":None}
         
-        return tweet_data
+        print(tweet_data)
 
-
-    
-
-        
-
-    
 class StartStream():
 
     def __init__(self, stream):
@@ -41,9 +35,9 @@ class StartStream():
         self.stream = stream
 
     # Adding a rule to search for Tweets
-    def insert_filter(self, *filter):
+    def insert_filter(self, *args):
 
-        for key in filter:
+        for key in args:
             self.stream.add_rules(tweepy.StreamRule(key))
 
 
@@ -56,9 +50,10 @@ stream = AllStream(API_BEARER_TOKEN)
     
 stream_data = StartStream(stream)
 
-stream_data.insert_filter(["Lula"])
+# Chaves para recuperação dos tweets
+stream_data.insert_filter(["Lula","Bolsonaro"])
 
-stream_data.start_stream()
+print(stream_data.start_stream())
 
 
 
