@@ -1,4 +1,5 @@
 import tweepy
+from kafka import KafkaProducer
 from credentials import *
 import json
 
@@ -25,8 +26,9 @@ class AllStream(tweepy.StreamingClient):
         else: 
             
             tweet_data = {"tweeet_id":json_response["data"]["id"], "tweet_text":json_response["data"]["text"],"location":None}
-        
-        print(tweet_data)
+
+        # Sending all the data using a kafka producer. 
+        producer.send('tweets', json.dumps(tweet_data).encode('utf-8'))
 
 class StartStream():
 
@@ -40,11 +42,11 @@ class StartStream():
         for key in args:
             self.stream.add_rules(tweepy.StreamRule(key))
 
-
     # Defining which filters will be used.
     def start_stream(self):
-        self.stream.filter(expansions = "author_id", user_fields = ["location"] )
+        self.stream.filter(expansions = "author_id", user_fields = ["location"])
 
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
 stream = AllStream(API_BEARER_TOKEN)
     
@@ -53,7 +55,8 @@ stream_data = StartStream(stream)
 # Chaves para recuperação dos tweets
 stream_data.insert_filter(["Lula","Bolsonaro"])
 
-print(stream_data.start_stream())
+stream_data.start_stream()
+
 
 
 
