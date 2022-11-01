@@ -1,0 +1,10 @@
+{
+    "type" : "record",
+    "namespace" : "Example",
+    "name" : "tweets",
+    "fields" : [
+       { "name" : "tweet_id" , "type" : "int" },
+       { "name" : "tweet_text" , "type" : "string" },
+       { "name" : "location" , "type" : "string" }
+    ]
+ }

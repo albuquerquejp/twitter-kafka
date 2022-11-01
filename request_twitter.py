@@ -1,6 +1,7 @@
 import tweepy
 from kafka import KafkaProducer
-from credentials import *
+from twitter_credentials import *
+from kafka_credentials import *
 import json
 
 
@@ -46,14 +47,14 @@ class StartStream():
     def start_stream(self):
         self.stream.filter(expansions = "author_id", user_fields = ["location"])
 
-producer = KafkaProducer(bootstrap_servers='localhost:9092')
+producer = KafkaProducer(sasl_plain_username= username,sasl_plain_password=password ,sasl_mechanism = mechanism,security_protocol=protocol, bootstrap_servers=servers)
 
 stream = AllStream(API_BEARER_TOKEN)
     
 stream_data = StartStream(stream)
 
 # Chaves para recuperação dos tweets
-stream_data.insert_filter(["Lula","Bolsonaro"])
+stream_data.insert_filter(["Lula", "Brasil"])
 
 stream_data.start_stream()
 
