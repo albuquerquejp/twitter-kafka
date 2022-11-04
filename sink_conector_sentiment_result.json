@@ -1,0 +1,19 @@
+{
+    "name": "S3_SINKConnector_SENTIMENT_RESULT",
+    "config": {
+      "topics": "sentiment_results",
+      "input.data.format": "AVRO",
+      "connector.class": "S3_SINK",
+      "name": "S3_SINKConnector_SENTIMENT_RESULT",
+      "kafka.auth.mode": "KAFKA_API_KEY",
+      "kafka.api.key": "****************",
+      "kafka.api.secret": "****************************************************************",
+      "aws.access.key.id": "********************",
+      "aws.secret.access.key": "****************************************",
+      "s3.bucket.name": "projeto-twitter-jp",
+      "output.data.format": "JSON",
+      "time.interval": "HOURLY",
+      "flush.size": "1000",
+      "tasks.max": "1"
+    }
+}
